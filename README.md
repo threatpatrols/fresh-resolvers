@@ -1,7 +1,7 @@
 # Fresh Resolvers
 
 Provides daily up-to-date lists of public DNS resolvers using source-data 
-from [public-dns.info](https://public-dns.info) and filtered for -
+from [public-dns.info](https://public-dns.info) filtered for -
 * servers that have high (1.00) reported uptime according to public-dns.info.
 * servers that support DNSSEC.
 * servers that pass [DNS Validator](https://github.com/vortexau/dnsvalidator) for 
@@ -11,9 +11,9 @@ The resolver lists are grouped by countries using their 2-letter country code th
 allowing you to choose resolvers that are proximate to your location (or not) for 
 better latency outcomes.
 
-The list of countries has been chosen by observing places where AWS has regions
-and using this as an estimate of locations where internet infrastructure is probably
-more-or-less good/strong; it's not perfect but serves the purpose.
+The list of countries has been chosen by observing locations where AWS has regions,
+and using this to estimate countries where internet infrastructure is probably
+more-or-less good/strong; it's not perfect but serves the purpose here.
 
 ```text
 AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA
