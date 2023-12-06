@@ -3,7 +3,7 @@ name: refresh-resolvers
 on:
   schedule:
     # 01:35 UTC
-    - cron:  "1 35 * * *"
+    - cron:  "35 1 * * *"
 
 jobs:
   refresh-list:
