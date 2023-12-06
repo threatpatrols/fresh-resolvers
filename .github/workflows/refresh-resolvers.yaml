@@ -1,27 +1,29 @@
 name: refresh-resolvers
 
 on:
+#  push:
+#    branches:
+#      - "dev"
   schedule:
-  # Run daily
-    - cron:  '0 21 * * *'
+    - cron:  '*/10 * * * *'
 
 jobs:
   resfresh-list:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.6'
-    
-      - name: checkout
-        uses: actions/checkout@v2
+      - name: Checkout project
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Use Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
       - name: Checkout DNS Validator
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: 'vortexau/dnsvalidator'
           path: dnsvalidator
@@ -31,25 +33,34 @@ jobs:
           cd dnsvalidator
           python3 setup.py install
       
-      - name: Install contextvars
-        run: pip3 install contextvars
-    
+      - name: Current UTC timestamp
+        run: |
+          TIMESTAMP_NOW=$(date --utc +'%Y-%m-%dT%H:%M:%S%z') && echo ${TIMESTAMP_NOW}
+          echo "TIMESTAMP_NOW=${TIMESTAMP_NOW}" >> $GITHUB_ENV
+          echo "MAX_RESOLVERS=100" >> $GITHUB_ENV
+          echo "COUNTRY_CODES=AE AU" >> $GITHUB_ENV
+          # COUNTRY_CODES='AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA'  # based on data/aws-regions.txt
+
       - name: Generate new resolvers
-        run: dnsvalidator -tL https://public-dns.info/nameservers.txt -threads 20 --silent -o ~/resolvers.txt
-    
-      - name: Set current date
-        run: echo "NOW=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-      
+        run: |
+          rm -Rf data/resolvers*
+          wget --quiet -O /tmp/nameservers.csv "https://public-dns.info/nameservers.csv"
+          for COUNTRY_CODE in ${COUNTRY_CODES}; do
+            echo "==="
+            echo "Resolvers for ${COUNTRY_CODE}"
+            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort | head -n ${MAX_RESOLVERS} > /tmp/resolvers-${COUNTRY_CODE}.tmp
+            dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.tmp -threads 30 --silent > data/resolvers-${COUNTRY_CODE}.txt
+            cat data/resolvers-${COUNTRY_CODE}.txt
+          done
+
       - name: Commit changes
         run: |
-          mv ~/resolvers.txt .
-          git config --local user.email "bot@barbersec.com"
+          git config --local user.email "bot@threatpatrols.com"
           git config --local user.name "github-actions[bot]"
-          git add resolvers.txt
-          git commit -m "${NOW} update"
-    
+          git add data/resolvers-*
+          git commit -m "${TIMESTAMP_NOW} update"
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
