@@ -45,6 +45,7 @@ jobs:
             echo "==="
             echo "Resolvers for ${COUNTRY_CODE}"
             cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort | head -n ${MAX_RESOLVERS} > /tmp/resolvers-${COUNTRY_CODE}.tmp
+            echo "1.1.1.1" >> /tmp/resolvers-${COUNTRY_CODE}.tmp
             dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.tmp -threads 30 --silent > data/resolvers-${COUNTRY_CODE}.txt
             cat data/resolvers-${COUNTRY_CODE}.txt
           done
