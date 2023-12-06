@@ -1,9 +1,6 @@
 name: refresh-resolvers
 
 on:
-#  push:
-#    branches:
-#      - "dev"
   schedule:
     - cron:  '*/10 * * * *'
 
@@ -38,8 +35,7 @@ jobs:
           TIMESTAMP_NOW=$(date --utc +'%Y-%m-%dT%H:%M:%S%z') && echo ${TIMESTAMP_NOW}
           echo "TIMESTAMP_NOW=${TIMESTAMP_NOW}" >> $GITHUB_ENV
           echo "MAX_RESOLVERS=100" >> $GITHUB_ENV
-          echo "COUNTRY_CODES=AE AU" >> $GITHUB_ENV
-          # COUNTRY_CODES='AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA'  # based on data/aws-regions.txt
+          echo "COUNTRY_CODES=AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA" >> $GITHUB_ENV
 
       - name: Generate new resolvers
         run: |
