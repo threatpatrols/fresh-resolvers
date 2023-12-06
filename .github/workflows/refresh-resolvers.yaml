@@ -5,8 +5,13 @@ on:
     - cron:  '*/10 * * * *'
 
 jobs:
-  resfresh-list:
+  refresh-list:
     runs-on: ubuntu-22.04
+
+    concurrency:
+      group: refresh-list-job
+      cancel-in-progress: false
+
     steps:
 
       - name: Checkout project
@@ -43,11 +48,13 @@ jobs:
           wget --quiet -O /tmp/nameservers.csv "https://public-dns.info/nameservers.csv"
           for COUNTRY_CODE in ${COUNTRY_CODES}; do
             echo "==="
-            echo "Resolvers for ${COUNTRY_CODE}"
-            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort | head -n ${MAX_RESOLVERS} > /tmp/resolvers-${COUNTRY_CODE}.tmp
-            echo "1.1.1.1" >> /tmp/resolvers-${COUNTRY_CODE}.tmp
+            echo "Resolvers for ${COUNTRY_CODE}..."
+            echo "0.0.0.0" > /tmp/resolvers-${COUNTRY_CODE}.tmp  # expected to be filtered out by dnsvalidator
+            # NB: errors in the form "sort: write failed: 'standard output': Broken pipe" are harmless
+            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort | head -n ${MAX_RESOLVERS} >> /tmp/resolvers-${COUNTRY_CODE}.tmp
             dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.tmp -threads 30 --silent > data/resolvers-${COUNTRY_CODE}.txt
-            cat data/resolvers-${COUNTRY_CODE}.txt
+            echo -n "Total ${COUNTRY_CODE} resolvers: "
+            cat data/resolvers-${COUNTRY_CODE}.txt | wc -l
           done
 
       - name: Commit changes
