@@ -53,8 +53,8 @@ jobs:
             echo "==="
             echo "Resolvers for ${COUNTRY_CODE}..."
             echo "1.1.1.1" > /tmp/resolvers-${COUNTRY_CODE}.tmp
-            echo "8.8.8.8" > /tmp/resolvers-${COUNTRY_CODE}.tmp
-            echo "9.9.9.9" > /tmp/resolvers-${COUNTRY_CODE}.tmp
+            echo "8.8.8.8" >> /tmp/resolvers-${COUNTRY_CODE}.tmp
+            echo "9.9.9.9" >> /tmp/resolvers-${COUNTRY_CODE}.tmp
           
             # NB: errors in the form "sort: write failed: 'standard output': Broken pipe" are harmless
             cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort | head -n ${MAX_RESOLVERS} >> /tmp/resolvers-${COUNTRY_CODE}.tmp
