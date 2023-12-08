@@ -3,7 +3,7 @@ name: refresh-resolvers
 on:
   schedule:
     # 01:35 UTC
-    - cron:  "35 1 * * *"
+    - cron:  "50 * * * *"
 
 jobs:
   refresh-list:
@@ -36,33 +36,41 @@ jobs:
           cd dnsvalidator
           python3 setup.py install
       
-      - name: Current UTC timestamp
+      - name: Configure variables
         run: |
           TIMESTAMP_NOW=$(date --utc +'%Y-%m-%dT%H:%M:%S%z') && echo ${TIMESTAMP_NOW}
           echo "TIMESTAMP_NOW=${TIMESTAMP_NOW}" >> $GITHUB_ENV
-          echo "MAX_RESOLVERS=100" >> $GITHUB_ENV
+          echo "RESOLVERS_PATH=resolvers" >> $GITHUB_ENV
+          echo "MAX_RESOLVERS=250" >> $GITHUB_ENV
+          echo "SOURCE_URL=https://public-dns.info/nameservers.csv" >> $GITHUB_ENV
           echo "COUNTRY_CODES=AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA" >> $GITHUB_ENV
 
       - name: Generate new resolvers
         run: |
-          rm -Rf data/resolvers*
-          wget --quiet -O /tmp/nameservers.csv "https://public-dns.info/nameservers.csv"
+          rm -f ${RESOLVERS_PATH}/*.txt
+          wget --quiet -O /tmp/nameservers.csv "${SOURCE_URL}"
           for COUNTRY_CODE in ${COUNTRY_CODES}; do
             echo "==="
             echo "Resolvers for ${COUNTRY_CODE}..."
-            echo "0.0.0.0" > /tmp/resolvers-${COUNTRY_CODE}.tmp  # expected to be filtered out by dnsvalidator
+            echo "1.1.1.1" > /tmp/resolvers-${COUNTRY_CODE}.tmp
+            echo "8.8.8.8" > /tmp/resolvers-${COUNTRY_CODE}.tmp
+            echo "9.9.9.9" > /tmp/resolvers-${COUNTRY_CODE}.tmp
+          
             # NB: errors in the form "sort: write failed: 'standard output': Broken pipe" are harmless
             cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort | head -n ${MAX_RESOLVERS} >> /tmp/resolvers-${COUNTRY_CODE}.tmp
-            dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.tmp -threads 30 --silent > data/resolvers-${COUNTRY_CODE}.txt
+          
+            # dnsvalidator
+            dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.tmp -threads 30 --silent > ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt || true
+          
             echo -n "Total ${COUNTRY_CODE} resolvers: "
-            cat data/resolvers-${COUNTRY_CODE}.txt | wc -l
+            cat ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt | wc -l
           done
 
       - name: Commit changes
         run: |
           git config --local user.email "bot@threatpatrols.com"
           git config --local user.name "github-actions[bot]"
-          git add data/resolvers-*
+          git add ${RESOLVERS_PATH}/*.txt
           git commit -m "${TIMESTAMP_NOW} update"
 
       - name: Push changes
