@@ -57,7 +57,8 @@ jobs:
             echo "9.9.9.9" >> /tmp/resolvers-${COUNTRY_CODE}.tmp
           
             # NB: errors in the form "sort: write failed: 'standard output': Broken pipe" are harmless
-            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort | head -n ${MAX_RESOLVERS} >> /tmp/resolvers-${COUNTRY_CODE}.tmp
+            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort --random-source /dev/urandom | head -n ${MAX_RESOLVERS} >> /tmp/resolvers-${COUNTRY_CODE}.tmp
+            sort --random-sort --random-source /dev/urandom --output /tmp/resolvers-${COUNTRY_CODE}.tmp /tmp/resolvers-${COUNTRY_CODE}.tmp
           
             # dnsvalidator
             dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.tmp -threads 30 --silent > ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt || true
