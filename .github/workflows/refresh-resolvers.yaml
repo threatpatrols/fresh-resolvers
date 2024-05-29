@@ -3,7 +3,7 @@ name: refresh-resolvers
 on:
   schedule:
     # 01:35 UTC
-    - cron:  "35 1 * * *"
+    - cron:  "35 1 */2 * *"
 
 jobs:
   refresh-list:
@@ -41,7 +41,7 @@ jobs:
           TIMESTAMP_NOW=$(date --utc +'%Y-%m-%dT%H:%M:%S%z') && echo ${TIMESTAMP_NOW}
           echo "TIMESTAMP_NOW=${TIMESTAMP_NOW}" >> $GITHUB_ENV
           echo "RESOLVERS_PATH=resolvers" >> $GITHUB_ENV
-          echo "MAX_RESOLVERS=250" >> $GITHUB_ENV
+          echo "MAX_RESOLVERS=100" >> $GITHUB_ENV
           echo "SOURCE_URL=https://public-dns.info/nameservers.csv" >> $GITHUB_ENV
           echo "COUNTRY_CODES=AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA" >> $GITHUB_ENV
 
@@ -52,9 +52,6 @@ jobs:
           for COUNTRY_CODE in ${COUNTRY_CODES}; do
             echo "==="
             echo "Resolvers for ${COUNTRY_CODE}..."
-            echo "1.1.1.1" > /tmp/resolvers-${COUNTRY_CODE}.tmp
-            echo "8.8.8.8" >> /tmp/resolvers-${COUNTRY_CODE}.tmp
-            echo "9.9.9.9" >> /tmp/resolvers-${COUNTRY_CODE}.tmp
 
             # poor mans random, because /dev/urandom is (maybe?) weird here; and we don't need crypto strong random
             date --iso-8601=ns | sha512sum | cut -d' ' -f1 | base64 -w0 | head -c 160 | rev | base64 -d > /tmp/poor-mans-random
@@ -68,8 +65,13 @@ jobs:
             # dnsvalidator
             dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.random -threads 30 --silent > ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
           
-            echo -n "Total ${COUNTRY_CODE} resolvers: "
-            cat ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt | wc -l
+            RESOLVERS_TOTAL=$(cat ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt | wc -l)
+            echo -n "Total ${COUNTRY_CODE} resolvers: ${RESOLVERS_TOTAL}"
+            
+            if [ ${RESOLVERS_TOTAL} -lt 1 ]; then
+              rm -f ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
+            fi
+          
           done
 
       - name: Commit changes
