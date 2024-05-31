@@ -1,15 +1,21 @@
 name: refresh-resolvers
 
 on:
-#  push:
-#    branches:
-#      - "dev"
-  schedule:
-    - cron:  '*/10 * * * *'
+  push:
+    branches: [ "dev" ]
+
+#  schedule:
+#    # 01:35 UTC
+#    - cron:  "35 1 */2 * *"
 
 jobs:
-  resfresh-list:
+  refresh-list:
     runs-on: ubuntu-22.04
+
+    concurrency:
+      group: refresh-list-job
+      cancel-in-progress: false
+
     steps:
 
       - name: Checkout project
@@ -27,37 +33,70 @@ jobs:
         with:
           repository: 'vortexau/dnsvalidator'
           path: dnsvalidator
-    
+
       - name: Install DNS Validator
         run: |
           cd dnsvalidator
           python3 setup.py install
-      
-      - name: Current UTC timestamp
+
+      - name: Configure variables
         run: |
           TIMESTAMP_NOW=$(date --utc +'%Y-%m-%dT%H:%M:%S%z') && echo ${TIMESTAMP_NOW}
           echo "TIMESTAMP_NOW=${TIMESTAMP_NOW}" >> $GITHUB_ENV
+          echo "RESOLVERS_PATH=resolvers" >> $GITHUB_ENV
           echo "MAX_RESOLVERS=100" >> $GITHUB_ENV
-          echo "COUNTRY_CODES=AE AU" >> $GITHUB_ENV
-          # COUNTRY_CODES='AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA'  # based on data/aws-regions.txt
+          echo "SOURCE_URL=https://public-dns.info/nameservers.csv" >> $GITHUB_ENV
+          echo "COUNTRY_CODES=AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA" >> $GITHUB_ENV
 
       - name: Generate new resolvers
         run: |
-          rm -Rf data/resolvers*
-          wget --quiet -O /tmp/nameservers.csv "https://public-dns.info/nameservers.csv"
+          mkdir -p ${RESOLVERS_PATH}
+          rm -f ${RESOLVERS_PATH}/*.txt
+          wget --quiet -O /tmp/nameservers.csv "${SOURCE_URL}"
           for COUNTRY_CODE in ${COUNTRY_CODES}; do
             echo "==="
-            echo "Resolvers for ${COUNTRY_CODE}"
-            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort | head -n ${MAX_RESOLVERS} > /tmp/resolvers-${COUNTRY_CODE}.tmp
-            dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.tmp -threads 30 --silent > data/resolvers-${COUNTRY_CODE}.txt
-            cat data/resolvers-${COUNTRY_CODE}.txt
+            echo "Resolvers for ${COUNTRY_CODE}..."
+
+            # poor mans random, because /dev/urandom is (somehow maybe?) weird in github-workflows; and we do not need crypto strong random
+            date --iso-8601=ns | sha512sum | cut -d' ' -f1 | base64 -w0 | head -c 160 | rev | base64 -d > /tmp/poor-mans-random
+          
+            # totals
+            RESOLVERS_COUNTRY_TOTAL=0
+            RESOLVERS_FILTERED_TOTAL=0
+            RESOLVERS_VALIDATED_TOTAL=0
+          
+            # resolvers all
+            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," > /tmp/resolvers-${COUNTRY_CODE}.country
+            RESOLVERS_COUNTRY_TOTAL=$(cat /tmp/resolvers-${COUNTRY_CODE}.country | wc -l)
+            echo "Total ${COUNTRY_CODE} resolvers listed: ${RESOLVERS_COUNTRY_TOTAL}"
+          
+            if [ ${RESOLVERS_COUNTRY_TOTAL} -gt 0 ]; then
+              cat /tmp/resolvers-${COUNTRY_CODE}.country | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort --random-source /tmp/poor-mans-random | head -n ${MAX_RESOLVERS} > /tmp/resolvers-${COUNTRY_CODE}.filtered
+          
+              # resolvers filtered
+              RESOLVERS_FILTERED_TOTAL=$(cat /tmp/resolvers-${COUNTRY_CODE}.filtered | wc -l)
+              echo "Total ${COUNTRY_CODE} resolvers for validation checking: ${RESOLVERS_FILTERED_TOTAL}"
+          
+              if [ ${RESOLVERS_FILTERED_TOTAL} -gt 0 ]; then
+                dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.filtered -threads 30 --silent > ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
+            
+                RESOLVERS_VALIDATED_TOTAL=$(cat ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt | wc -l)
+                echo "Total ${COUNTRY_CODE} validated resolvers: ${RESOLVERS_VALIDATED_TOTAL}"
+              fi
+            fi
+              
+            if [ ${RESOLVERS_VALIDATED_TOTAL} -lt 1 ]; then
+              rm -f ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
+              echo "Removed ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt"
+            fi
+          
           done
 
       - name: Commit changes
         run: |
           git config --local user.email "bot@threatpatrols.com"
           git config --local user.name "github-actions[bot]"
-          git add data/resolvers-*
+          git add ${RESOLVERS_PATH}
           git commit -m "${TIMESTAMP_NOW} update"
 
       - name: Push changes
