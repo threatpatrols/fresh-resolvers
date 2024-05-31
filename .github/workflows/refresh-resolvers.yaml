@@ -63,12 +63,12 @@ jobs:
             cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort --random-source /tmp/poor-mans-random | head -n ${MAX_RESOLVERS} >> /tmp/resolvers-${COUNTRY_CODE}.tmp
           
             # resolvers
-            RESOLVERS_VALIDATION_TOTAL=$(cat /tmp/resolvers-${COUNTRY_CODE}.random | wc -l)
+            RESOLVERS_VALIDATION_TOTAL=$(cat /tmp/resolvers-${COUNTRY_CODE}.tmp | wc -l)
             echo "Total ${COUNTRY_CODE} resolvers for validation checking: ${RESOLVERS_VALIDATION_TOTAL}"
           
             if [ ${RESOLVERS_VALIDATION_TOTAL} -gt 0 ]; then
               # dnsvalidator
-              dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.random -threads 30 --silent > ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
+              dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.tmp -threads 30 --silent > ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
           
               RESOLVERS_TOTAL=$(cat ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt | wc -l)
               echo "Total ${COUNTRY_CODE} validated resolvers: ${RESOLVERS_TOTAL}"
