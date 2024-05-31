@@ -50,6 +50,7 @@ jobs:
 
       - name: Generate new resolvers
         run: |
+          mkdir -p ${RESOLVERS_PATH}
           rm -f ${RESOLVERS_PATH}/*.txt
           wget --quiet -O /tmp/nameservers.csv "${SOURCE_URL}"
           for COUNTRY_CODE in ${COUNTRY_CODES}; do
