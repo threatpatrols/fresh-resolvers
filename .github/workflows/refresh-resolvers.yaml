@@ -57,19 +57,26 @@ jobs:
             date --iso-8601=ns | sha512sum | cut -d' ' -f1 | base64 -w0 | head -c 160 | rev | base64 -d > /tmp/poor-mans-random
           
             # NB: errors in the form "sort: write failed: 'standard output': Broken pipe" are harmless
-            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | sort --random-sort --random-source /tmp/poor-mans-random | head -n ${MAX_RESOLVERS} >> /tmp/resolvers-${COUNTRY_CODE}.tmp
+            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," | grep ',true,1.00.20' | cut -d',' -f1 | grep -v ':' | grep '.' | head -n ${MAX_RESOLVERS} >> /tmp/resolvers-${COUNTRY_CODE}.tmp
           
             # shuffle
             sort --random-sort --random-source /tmp/poor-mans-random /tmp/resolvers-${COUNTRY_CODE}.tmp > /tmp/resolvers-${COUNTRY_CODE}.random
           
-            # dnsvalidator
-            dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.random -threads 30 --silent > ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
+            if [ $(cat /tmp/resolvers-${COUNTRY_CODE}.random | wc -l) -eq 0 ]; then
+              echo "Total ${COUNTRY_CODE} resolvers: nil-source"
           
-            RESOLVERS_TOTAL=$(cat ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt | wc -l)
-            echo -n "Total ${COUNTRY_CODE} resolvers: ${RESOLVERS_TOTAL}"
+            else
+              # dnsvalidator
+              dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.random -threads 30 --silent > ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
+          
+              RESOLVERS_TOTAL=$(cat ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt | wc -l)
+              echo "Total ${COUNTRY_CODE} resolvers: ${RESOLVERS_TOTAL}"
             
-            if [ ${RESOLVERS_TOTAL} -lt 1 ]; then
-              rm -f ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
+              if [ ${RESOLVERS_TOTAL} -lt 1 ]; then
+                rm -f ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
+                echo "Removed ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt"
+              fi
+          
             fi
           
           done
@@ -78,7 +85,7 @@ jobs:
         run: |
           git config --local user.email "bot@threatpatrols.com"
           git config --local user.name "github-actions[bot]"
-          git add ${RESOLVERS_PATH}/*.txt
+          git add ${RESOLVERS_PATH}
           git commit -m "${TIMESTAMP_NOW} update"
 
       - name: Push changes
