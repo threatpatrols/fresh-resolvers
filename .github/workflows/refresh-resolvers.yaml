@@ -1,6 +1,7 @@
 name: refresh-resolvers
 
 on:
+
   push:
     branches: [ "dev" ]
 
@@ -75,7 +76,7 @@ jobs:
           
               # resolvers filtered
               RESOLVERS_FILTERED_TOTAL=$(cat /tmp/resolvers-${COUNTRY_CODE}.filtered | wc -l)
-              echo "Total ${COUNTRY_CODE} resolvers for validation checking: ${RESOLVERS_FILTERED_TOTAL}"
+              echo "Total ${COUNTRY_CODE} resolvers after filter for validation testing: ${RESOLVERS_FILTERED_TOTAL}"
           
               if [ ${RESOLVERS_FILTERED_TOTAL} -gt 0 ]; then
                 dnsvalidator -tL /tmp/resolvers-${COUNTRY_CODE}.filtered -threads 30 --silent > ${RESOLVERS_PATH}/resolvers-${COUNTRY_CODE}.txt
