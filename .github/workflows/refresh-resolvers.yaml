@@ -42,7 +42,6 @@ jobs:
 
       - name: Configure variables
         run: |
-          set -x 
           TIMESTAMP_NOW=$(date --utc +'%Y-%m-%dT%H:%M:%S%z') && echo ${TIMESTAMP_NOW}
           echo "TIMESTAMP_NOW=${TIMESTAMP_NOW}" >> $GITHUB_ENV
           echo "RESOLVERS_PATH=resolvers" >> $GITHUB_ENV
@@ -53,6 +52,7 @@ jobs:
 
       - name: Generate new resolvers
         run: |
+          set -x
           mkdir -p ${RESOLVERS_PATH}
           rm -f ${RESOLVERS_PATH}/*.txt
           wget --quiet -O /tmp/nameservers.csv "${SOURCE_URL}"
