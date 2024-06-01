@@ -1,7 +1,7 @@
 # AWS Regions; extended with 2-letter country codes
 #
 # Used as a quick reference for 2-letter country codes that have internet infrastructure large enough
-# to warrant an AWS region; sourced 2023-12-06 from https://www.aws-services.info/regions.html
+# to warrant an AWS region; updated 2024-06-01 from https://www.aws-services.info/regions.html
 #
 
 af-south-1          Africa (Cape Town)              ZA
@@ -15,6 +15,7 @@ ap-southeast-1      Asia Pacific (Singapore)        SG
 ap-southeast-2      Asia Pacific (Sydney)           AU
 ap-southeast-3      Asia Pacific (Jakarta)          ID
 ap-southeast-4      Asia Pacific (Melbourne)        AU
+ca-west-1           Canada (West)                   CA
 ca-central-1        Canada (Central)                CA
 cn-north-1          China (Beijing)                 CN
 cn-northwest-1      China (Ningxia)                 CN
