@@ -5,9 +5,9 @@ on:
   push:
     branches: [ "dev" ]
 
-#  schedule:
-#    # 01:35 UTC
-#    - cron:  "35 1 */2 * *"
+  schedule:
+    # 01:35 UTC
+    - cron:  "35 1 */2 * *"
 
 jobs:
   refresh-list:
@@ -42,12 +42,14 @@ jobs:
 
       - name: Configure variables
         run: |
+          set -x 
           TIMESTAMP_NOW=$(date --utc +'%Y-%m-%dT%H:%M:%S%z') && echo ${TIMESTAMP_NOW}
           echo "TIMESTAMP_NOW=${TIMESTAMP_NOW}" >> $GITHUB_ENV
           echo "RESOLVERS_PATH=resolvers" >> $GITHUB_ENV
           echo "MAX_RESOLVERS=100" >> $GITHUB_ENV
           echo "SOURCE_URL=https://public-dns.info/nameservers.csv" >> $GITHUB_ENV
-          echo "COUNTRY_CODES=AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA" >> $GITHUB_ENV
+          # echo "COUNTRY_CODES=AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA" >> $GITHUB_ENV
+          echo "COUNTRY_CODES=UK US ZA" >> $GITHUB_ENV
 
       - name: Generate new resolvers
         run: |
