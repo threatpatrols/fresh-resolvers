@@ -69,7 +69,7 @@ jobs:
             RESOLVERS_VALIDATED_TOTAL=0
           
             # resolvers all
-            cat /tmp/nameservers.csv | grep -v '#' | grep ",${COUNTRY_CODE}," > /tmp/resolvers-${COUNTRY_CODE}.country
+            cat /tmp/nameservers.csv | grep -v '#' | (grep ",${COUNTRY_CODE}," || true) > /tmp/resolvers-${COUNTRY_CODE}.country
             RESOLVERS_COUNTRY_TOTAL=$(cat /tmp/resolvers-${COUNTRY_CODE}.country | wc -l)
             echo "Total ${COUNTRY_CODE} resolvers listed: ${RESOLVERS_COUNTRY_TOTAL}"
           
