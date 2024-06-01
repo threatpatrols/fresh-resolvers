@@ -1,6 +1,8 @@
 # AWS Regions; extended with 2-letter country codes
-# Used as a quick reference for 2-letter country codes that have internet infrastructure large enough for AWS
-# sourced 2023-12-06 https//www.aws-services.info/regions.html
+#
+# Used as a quick reference for 2-letter country codes that have internet infrastructure large enough
+# to warrant an AWS region; sourced 2023-12-06 from https://www.aws-services.info/regions.html
+#
 
 af-south-1          Africa (Cape Town)              ZA
 ap-east-1           Asia Pacific (Hong Kong)        HK
