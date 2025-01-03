@@ -22,7 +22,7 @@ AE AU BH BR CA CH CN DE ES FR HK ID IE IL IN IT JP KR SE SG UK US ZA
 
 Because the source list of resolvers from `public-dns.info` can be very large our
 processing performs a random shuffle on the filtered country list then selects the 
-top-100 ipv4 addresses before passing them through `dnsvalidator`. This is done 
+top-200 ipv4 addresses before passing them through `dnsvalidator`. This is done 
 because the dnsvalidator processing can take significant time to complete.  This also 
 means the list of resolvers (and the order in which they appear) should change daily.
 
