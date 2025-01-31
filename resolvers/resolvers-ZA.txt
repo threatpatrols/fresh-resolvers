@@ -1,0 +1,16 @@
+# 
+# Timestamp: 2025-01-31T02:59:49+00:00
+# HLID: 20250131-0235-0012-6216-30dc135e53d3
+# Country: ZA
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+41.185.10.153
+77.246.57.132
+102.135.163.26
+102.221.12.46
+102.33.43.8
+102.33.45.152
+102.33.47.78
+105.224.41.62
+105.247.182.102

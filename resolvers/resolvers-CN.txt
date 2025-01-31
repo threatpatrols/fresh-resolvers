@@ -1,0 +1,9 @@
+# 
+# Timestamp: 2025-01-31T02:43:06+00:00
+# HLID: 20250131-0235-0012-6216-30dc135e53d3
+# Country: CN
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+202.46.34.74
+202.46.34.75
