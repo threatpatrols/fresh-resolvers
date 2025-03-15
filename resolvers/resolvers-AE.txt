@@ -1,0 +1,9 @@
+# 
+# Timestamp: 2025-03-15T02:43:14+00:00
+# HLID: 20250315-0242-0034-7846-9aa87d63a370
+# Country: AE
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+45.9.250.164
+94.201.105.155
