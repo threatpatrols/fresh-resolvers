@@ -1,0 +1,12 @@
+# 
+# Timestamp: 2025-05-24T03:07:04+00:00
+# HLID: 20250524-0256-0013-9610-4aaf2feac42d
+# Country: ES
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+84.236.142.130
+90.168.88.15
+92.43.224.1
+134.255.247.23
+185.93.3.163
