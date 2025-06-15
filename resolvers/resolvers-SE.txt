@@ -1,0 +1,10 @@
+# 
+# Timestamp: 2025-06-15T03:35:34+00:00
+# HLID: 20250615-0315-0000-8732-d3596210cd52
+# Country: SE
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+5.254.198.142
+81.216.9.12
+81.94.164.237
