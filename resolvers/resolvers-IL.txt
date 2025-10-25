@@ -1,0 +1,11 @@
+# 
+# Timestamp: 2025-10-25T03:05:59+00:00
+# HLID: 20251025-0250-0030-5189-cc19c4dc2bad
+# Country: IL
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+45.83.40.44
+80.178.255.122
+81.5.20.254
+195.28.181.161
