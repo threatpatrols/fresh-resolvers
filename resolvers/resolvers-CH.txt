@@ -1,0 +1,14 @@
+# 
+# Timestamp: 2025-11-29T03:08:35+00:00
+# HLID: 20251129-0301-0018-1723-99f8cbd4b351
+# Country: CH
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+9.9.9.12
+9.9.9.13
+81.17.17.170
+85.195.233.252
+195.186.1.111
+195.186.4.192
+213.180.182.246
