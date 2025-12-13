@@ -1,0 +1,19 @@
+# 
+# Timestamp: 2025-12-13T03:10:54+00:00
+# HLID: 20251213-0304-0048-0685-db783e5aba33
+# Country: CA
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+66.163.0.161
+66.163.0.173
+67.231.17.253
+76.76.10.155
+99.79.182.170
+149.112.122.10
+149.112.122.20
+149.112.122.30
+169.54.78.85
+207.195.35.143
+208.91.112.52
+216.21.128.22
