@@ -1,0 +1,18 @@
+# 
+# Timestamp: 2025-12-27T03:23:51+00:00
+# HLID: 20251227-0311-0031-4677-36aaeb0d1cf8
+# Country: FR
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+51.178.84.208
+51.38.134.82
+78.153.224.243
+79.137.66.87
+82.64.136.152
+87.98.141.221
+91.121.59.192
+91.134.159.109
+141.95.6.51
+146.59.15.173
+195.154.57.169
