@@ -1,0 +1,21 @@
+# 
+# Timestamp: 2026-01-04T03:29:51+00:00
+# HLID: 20260104-0328-0038-3583-bd15510ca4c9
+# Country: AU
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+1.0.0.19
+1.0.0.2
+1.0.0.3
+1.1.1.2
+1.1.1.3
+1.10.10.10
+49.255.4.22
+54.66.128.66
+60.240.176.183
+80.249.3.204
+103.86.96.100
+202.138.73.149
+203.54.212.126
+210.18.214.38

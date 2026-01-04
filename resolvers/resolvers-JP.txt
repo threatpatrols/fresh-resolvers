@@ -1,0 +1,14 @@
+# 
+# Timestamp: 2026-01-04T03:47:25+00:00
+# HLID: 20260104-0328-0038-3583-bd15510ca4c9
+# Country: JP
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+20.46.112.146
+54.64.107.105
+126.249.167.161
+126.249.167.193
+153.120.88.148
+172.104.93.80
+203.178.136.36
