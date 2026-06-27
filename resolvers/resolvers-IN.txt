@@ -1,0 +1,18 @@
+# 
+# Timestamp: 2026-06-27T05:51:51+00:00
+# HLID: 20260627-0533-0059-1756-8edcfb349fcc
+# Country: IN
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+35.154.249.83
+36.50.50.50
+61.1.106.16
+103.132.242.59
+103.134.44.222
+103.213.202.166
+122.185.112.188
+122.185.251.225
+169.38.73.5
+182.156.93.102
+182.78.166.110
