@@ -1,0 +1,17 @@
+# 
+# Timestamp: 2026-08-08T03:25:37+00:00
+# HLID: 20260808-0312-0006-8425-24f7539c520a
+# Country: HK
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+61.238.97.254
+94.190.214.173
+103.51.144.212
+103.51.144.214
+103.51.144.216
+202.131.73.38
+210.0.128.241
+210.0.128.250
+210.0.255.144
+210.176.88.93

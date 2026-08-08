@@ -1,0 +1,13 @@
+# 
+# Timestamp: 2026-08-08T03:24:32+00:00
+# HLID: 20260808-0312-0006-8425-24f7539c520a
+# Country: FR
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+79.137.66.87
+85.169.94.218
+91.121.59.192
+141.95.6.51
+151.80.145.143
+212.73.198.88
