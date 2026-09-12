@@ -1,0 +1,16 @@
+# 
+# Timestamp: 2026-09-12T06:48:19+00:00
+# HLID: 20260912-0626-0052-8983-75712763ff13
+# Country: SG
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+42.61.19.254
+54.255.130.140
+58.185.165.125
+58.185.89.201
+103.86.99.100
+115.42.222.113
+129.126.119.238
+151.192.44.238
+203.125.208.78
