@@ -1,0 +1,8 @@
+# 
+# Timestamp: 2026-10-03T07:18:43+00:00
+# HLID: 20261003-0703-0037-0848-57914498b3b1
+# Country: IE
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+54.229.171.243
