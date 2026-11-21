@@ -1,0 +1,15 @@
+# 
+# Timestamp: 2026-11-21T08:46:11+00:00
+# HLID: 20261121-0843-0050-5988-50be7eae122c
+# Country: KR
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+58.103.130.4
+158.247.210.85
+211.115.194.1
+211.115.194.2
+211.115.194.3
+211.115.194.4
+211.115.194.5
+211.63.64.11
