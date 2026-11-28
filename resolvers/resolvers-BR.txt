@@ -1,0 +1,11 @@
+# 
+# Timestamp: 2026-11-28T09:24:45+00:00
+# HLID: 20261128-0924-0002-3652-f5ea4b377d81
+# Country: BR
+# Source data: https://public-dns.info/nameservers.csv
+# Updates: https://github.com/threatpatrols/fresh-resolvers
+# 
+45.228.32.139
+45.6.136.231
+168.195.135.71
+190.89.22.77
